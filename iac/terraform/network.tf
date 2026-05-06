@@ -58,3 +58,19 @@ resource "aws_route_table" "private_rt_az_a" {
 resource "aws_route_table" "private_rt_az_b" {
   vpc_id = aws_vpc.main.id
 }
+
+# SUBREDES PÚBLICAS NAT Gateway/Internet Gateway
+resource "aws_subnet" "public_az_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "${var.region}a"
+  map_public_ip_on_launch = true
+  tags = { Name = "public-a-${terraform.workspace}" }
+}
+resource "aws_subnet" "public_az_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "${var.region}b"
+  map_public_ip_on_launch = true
+  tags = { Name = "public-b-${terraform.workspace}" }
+}
