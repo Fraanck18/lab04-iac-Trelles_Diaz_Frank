@@ -47,7 +47,14 @@ resource "aws_apigatewayv2_stage" "api_stage" {
   # CONFIGURACION DE \nAccess logs para Cloudwatch
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_logs.arn
-    format          = "$context.requestId $context.identity.sourceIp $context.protocol $context.status"
+
+    #CONFIGURACION PARA \nFormat CAPA OBSERVABILIDAD
+    format = jsonencode({
+      requestId = "$context.requestId"
+      ip        = "$context.identity.sourceIp"
+      status    = "$context.status"
+      protocol  = "$context.protocol"
+    })
   }
 }
 
