@@ -101,3 +101,23 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
   depends_on = [aws_sqs_queue_policy.image_queue_policy]
 }
+
+#POLITICAS DE S3 PARA ENVIAR MENSAJES A SQS
+resource "aws_sqs_queue_policy" "image_queue_policy" {
+  queue_url = aws_sqs_queue.image_queue.id # Asegúrate que tu queue se llame image_queue
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "sqs:SendMessage"
+        Resource  = aws_sqs_queue.image_queue.arn
+        Condition = {
+          ArnEquals = { "aws:SourceArn": aws_s3_bucket.images.arn }
+        }
+      }
+    ]
+  })
+}
