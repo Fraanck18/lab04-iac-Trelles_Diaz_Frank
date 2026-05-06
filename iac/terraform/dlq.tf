@@ -13,22 +13,29 @@ resource "aws_sqs_queue" "image_queue_dlq" {
   }
 }
 
-# CONFIGURACION \nCloudWatch 
+# CONFIGURACION \nCloudWatch alarm
 resource "aws_cloudwatch_metric_alarm" "dlq_alarm" {
-  alarm_name          = "alarm-sqs-image-processor-${terraform.workspace}-dlq-not-empty"
+
+  alarm_name          = "dlq-messages-alarm-${terraform.workspace}" 
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "ApproximateNumberOfMessagesVisible"
   namespace           = "AWS/SQS"
-  period              = "60" # 1 minuto
+  period              = "60" 
   statistic           = "Sum"
-  threshold           = "0" 
-  alarm_description   = "Mensajes fallidos en la DLQ de PROC-IMG-API"
+  threshold           = "0"
   
+  # CONFIGURACION \nAction: notify via SNS topic
+  alarm_actions       = [aws_sns_topic.dlq_alerts.arn]
+
   dimensions = {
     QueueName = aws_sqs_queue.image_queue_dlq.name
   }
 
-  # ACTIVACION DE ALARMA SNS
-  alarm_actions = [aws_sns_topic.alerts.arn]
+  alarm_description   = "Mensajes fallidos en la DLQ "
+}
+
+# CONFIGURACION trigger alarm 
+resource "aws_sns_topic" "dlq_alerts" {
+  name = "dlq-messages-alerts-${terraform.workspace}"
 }
