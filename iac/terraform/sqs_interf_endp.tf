@@ -49,6 +49,6 @@ resource "aws_security_group" "sg_vpce_sqs" {
   }
 
   tags = {
-    Name = "sg-vpce-sqs"
+    name = "vpce-sqs-sg-${terraform.workspace}"
   }
 }
