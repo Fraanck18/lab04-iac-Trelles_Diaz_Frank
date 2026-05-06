@@ -17,9 +17,7 @@ resource "aws_apigatewayv2_api" "HTTP-API" {
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id           = aws_apigatewayv2_api.HTTP-API.id
   integration_type = "AWS_PROXY"
-  integration_uri  = aws_lambda_function.procesador_imagenes.invoke_arn
-
-  # CONFIGURACION DE \nPayload 
+  integration_uri  = aws_lambda_function.upload_lambda.invoke_arn 
   payload_format_version = "2.0" 
 }
 
@@ -62,4 +60,12 @@ resource "aws_apigatewayv2_stage" "api_stage" {
 resource "aws_cloudwatch_log_group" "api_logs" {
   name              = "/iac/terraform/api-gateway/PROC-IMG-API-${terraform.workspace}"
   retention_in_days = 14 # --> DIAGRAMA MERMAID 
+}
+
+resource "aws_lambda_permission" "api_gw" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.upload_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.HTTP-API.execution_arn}/*/*"
 }
