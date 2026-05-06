@@ -54,5 +54,5 @@ resource "aws_apigatewayv2_stage" "api_stage" {
 # CONFIGURACION DE LOG GROUP 
 resource "aws_cloudwatch_log_group" "api_logs" {
   name              = "/iac/terraform/api-gateway/PROC-IMG-API-${terraform.workspace}"
-  retention_in_days = 1 
+  retention_in_days = 14 # --> DIAGRAMA MERMAID 
 }
