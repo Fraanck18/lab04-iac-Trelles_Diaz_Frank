@@ -8,12 +8,12 @@ variable "aws_profiles" {
   type = map(string)
   default = {
     dev  = "tfdev"
-    qa   = "tfdev"
-    prod = "tfdev"
+    qa   = "tfqa"
+    prod = "tfprod"
   }
 }
 
-# NECESITAMOS DEFINIR EL PARAMETRO PARA LA ELECCION DEL ENTORNO DE DESPLIEGUE
+# DEFINIMOS PARAMETROS
 locals {
   aws_profile = var.aws_profiles[terraform.workspace]
 }
