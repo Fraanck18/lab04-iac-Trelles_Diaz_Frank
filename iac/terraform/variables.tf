@@ -17,3 +17,9 @@ variable "aws_profiles" {
 locals {
   aws_profile = var.aws_profiles[terraform.workspace]
 }
+
+#PARAMETROS PARA VPC
+variable "vpc_cidr" {
+  description = "Rango de IPs para la VPC"
+  type        = string
+}
