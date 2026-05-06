@@ -37,7 +37,7 @@ resource "aws_route_table" "public_rt" {
 
 
 
-#DIVISIO SUBNETS PUBLICAS AZ-A/AZ-B
+#DIVISION SUBNETS PUBLICAS AZ-A/AZ-B
 resource "aws_route_table_association" "public_az_a" {
   subnet_id      = aws_subnet.public_az_a.id
   route_table_id = aws_route_table.public_rt.id
